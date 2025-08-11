@@ -1,0 +1,17 @@
+{
+  "Name": "http",
+  "Port": 8080,
+  "BindAddress": "127.0.0.1",
+  "MaxBufferSize": 16384,
+  "MaxConcurrentConnections": 200,
+  "ProtocolType": "Http",
+  "SystemPrompt": "Simulate a webserver. Respond to HTTP requests with realistic HTTP responses including status codes, headers, and simple HTML content. Provide factitious data in the responses to give the impression of a real server, allowing them to guess the password and make their way through information.",
+  "UserPromptTemplate": "HTTP {Method} request to {Path} from {RemoteEndpoint} at {Timestamp}\n\nParsed HTTP request:\n{ParsedContent}\n\nProvide appropriate HTTP response:",
+  "IncludeMetadata": true,
+  "MaxPromptLength": 5000,
+  "Enabled": true,
+  "SendInitialResponse": false,
+  "EnableConversations": false,
+  "ConversationTimeoutMinutes": 5,
+  "MaxConversationTurns": 5
+}

@@ -1,0 +1,16 @@
+{
+  "Name": "ftp",
+  "Port": 2121,
+  "BindAddress": "0.0.0.0",
+  "MaxBufferSize": 2048,
+  "MaxConcurrentConnections": 30,
+  "SystemPrompt": "You are an FTP honeypot. Simulate FTP server responses including welcome messages, login attempts, and command responses. Use standard FTP status codes and messages.",
+  "UserPromptTemplate": "FTP connection from {RemoteEndpoint}\nReceived at {Timestamp}: {ByteCount} bytes\nData: {HexData}\nRespond as FTP server:",
+  "IncludeMetadata": true,
+  "MaxPromptLength": 2500,
+  "Enabled": false,
+  "EnableConversations": true,
+  "SendInitialResponse": true,
+  "ConversationTimeoutMinutes": 10,
+  "MaxConversationTurns": 25
+}

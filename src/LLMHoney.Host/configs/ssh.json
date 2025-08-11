@@ -1,0 +1,17 @@
+{
+  "Name": "ssh",
+  "Port": 2222,
+  "BindAddress": "0.0.0.0",
+  "ProtocolType": "Ssh",
+  "MaxBufferSize": 8192,
+  "MaxConcurrentConnections": 100,
+  "SystemPrompt": "You are an SSH honeypot. Simulate SSH protocol responses including version strings, key exchanges, and authentication attempts. Respond with realistic SSH protocol messages. Keep the conversation going by asking for additional authentication or providing appropriate responses to SSH commands.",
+  "UserPromptTemplate": "SSH connection from {RemoteEndpoint} at {Timestamp}\nData ({ByteCount} bytes): {HexData}\nGenerate appropriate SSH protocol response:",
+  "IncludeMetadata": false,
+  "MaxPromptLength": 4000,
+  "Enabled": true,
+  "EnableConversations": true,
+  "SendInitialResponse": true,
+  "ConversationTimeoutMinutes": 15,
+  "MaxConversationTurns": 30
+}

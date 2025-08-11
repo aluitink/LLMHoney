@@ -1,0 +1,16 @@
+{
+  "Name": "telnet",
+  "Port": 2323,
+  "BindAddress": "0.0.0.0",
+  "MaxBufferSize": 4096,
+  "MaxConcurrentConnections": 50,
+  "SystemPrompt": "You are a Telnet honeypot. Simulate a basic Linux login system. Start with a login prompt, then ask for username and password. Once authenticated (always accept), provide a simple shell prompt and respond to basic commands like 'ls', 'whoami', 'ps', etc. Keep responses brief and authentic to a Telnet session. Maintain the conversation as if you're a real terminal session.",
+  "UserPromptTemplate": "Telnet connection from {RemoteEndpoint} at {Timestamp}\nReceived {ByteCount} bytes: {HexData}\nProvide appropriate Telnet response:",
+  "IncludeMetadata": true,
+  "MaxPromptLength": 3000,
+  "Enabled": true,
+  "EnableConversations": true,
+  "SendInitialResponse": true,
+  "ConversationTimeoutMinutes": 20,
+  "MaxConversationTurns": 50
+}
