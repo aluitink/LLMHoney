@@ -1,0 +1,134 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  PROJECT_PATH: 'src/LLMHoney.Host/LLMHoney.Host.csproj'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        runtime: [win-x64, linux-x64]
+        
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Restore dependencies
+      run: dotnet restore LLMHoney.sln
+      working-directory: ./LLMHoney
+    
+    - name: Build
+      run: dotnet build LLMHoney.sln --no-restore --configuration Release
+      working-directory: ./LLMHoney
+    
+    - name: Test
+      run: dotnet test LLMHoney.sln --no-build --configuration Release --verbosity normal
+      working-directory: ./LLMHoney
+    
+    - name: Publish ${{ matrix.runtime }}
+      run: |
+        dotnet publish ${{ env.PROJECT_PATH }} \
+          --configuration Release \
+          --runtime ${{ matrix.runtime }} \
+          --self-contained true \
+          --output ./publish/${{ matrix.runtime }} \
+          -p:PublishSingleFile=true \
+          -p:PublishTrimmed=true \
+          -p:TrimMode=partial
+      working-directory: ./LLMHoney
+    
+    - name: Create artifact name
+      id: artifact
+      run: |
+        if [ "${{ matrix.runtime }}" = "win-x64" ]; then
+          echo "name=LLMHoney-${{ matrix.runtime }}.exe" >> $GITHUB_OUTPUT
+          echo "path=./LLMHoney/publish/${{ matrix.runtime }}/LLMHoney.Host.exe" >> $GITHUB_OUTPUT
+        else
+          echo "name=LLMHoney-${{ matrix.runtime }}" >> $GITHUB_OUTPUT
+          echo "path=./LLMHoney/publish/${{ matrix.runtime }}/LLMHoney.Host" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ steps.artifact.outputs.name }}
+        path: ${{ steps.artifact.outputs.path }}
+        retention-days: 30
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./artifacts
+    
+    - name: Display structure of downloaded files
+      run: ls -la ./artifacts
+    
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+        body: |
+          ## LLMHoney Release ${{ github.ref_name }}
+          
+          ### Downloads
+          - **Windows (x64)**: LLMHoney-win-x64.exe
+          - **Linux (x64)**: LLMHoney-linux-x64
+          
+          ### Installation
+          
+          #### Windows
+          1. Download `LLMHoney-win-x64.exe`
+          2. Run the executable directly
+          
+          #### Linux
+          1. Download `LLMHoney-linux-x64`
+          2. Make it executable: `chmod +x LLMHoney-linux-x64`
+          3. Run: `./LLMHoney-linux-x64`
+          
+          ### Changes
+          See commit history for detailed changes.
+    
+    - name: Upload Windows Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/LLMHoney-win-x64.exe/LLMHoney.Host.exe
+        asset_name: LLMHoney-win-x64.exe
+        asset_content_type: application/octet-stream
+    
+    - name: Upload Linux Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./artifacts/LLMHoney-linux-x64/LLMHoney.Host
+        asset_name: LLMHoney-linux-x64
+        asset_content_type: application/octet-stream
