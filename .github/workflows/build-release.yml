@@ -28,15 +28,12 @@ jobs:
     
     - name: Restore dependencies
       run: dotnet restore LLMHoney.sln
-      working-directory: ./LLMHoney
     
     - name: Build
       run: dotnet build LLMHoney.sln --no-restore --configuration Release
-      working-directory: ./LLMHoney
     
     - name: Test
       run: dotnet test LLMHoney.sln --no-build --configuration Release --verbosity normal
-      working-directory: ./LLMHoney
     
     - name: Publish ${{ matrix.runtime }}
       run: |
@@ -48,17 +45,16 @@ jobs:
           -p:PublishSingleFile=true \
           -p:PublishTrimmed=true \
           -p:TrimMode=partial
-      working-directory: ./LLMHoney
     
     - name: Create artifact name
       id: artifact
       run: |
         if [ "${{ matrix.runtime }}" = "win-x64" ]; then
           echo "name=LLMHoney-${{ matrix.runtime }}.exe" >> $GITHUB_OUTPUT
-          echo "path=./LLMHoney/publish/${{ matrix.runtime }}/LLMHoney.Host.exe" >> $GITHUB_OUTPUT
+          echo "path=./publish/${{ matrix.runtime }}/LLMHoney.Host.exe" >> $GITHUB_OUTPUT
         else
           echo "name=LLMHoney-${{ matrix.runtime }}" >> $GITHUB_OUTPUT
-          echo "path=./LLMHoney/publish/${{ matrix.runtime }}/LLMHoney.Host" >> $GITHUB_OUTPUT
+          echo "path=./publish/${{ matrix.runtime }}/LLMHoney.Host" >> $GITHUB_OUTPUT
         fi
     
     - name: Upload build artifacts
