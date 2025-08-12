@@ -24,6 +24,8 @@ public sealed class EmbeddedConfigurationExtractor : IEmbeddedConfigurationExtra
 
     public async Task ExtractDefaultConfigurationsAsync(CancellationToken cancellationToken = default)
     {
+        _logger.LogInformation("Setting up default configurations for first-time usage...");
+        
         var configDir = Path.GetFullPath(_options.ConfigDirectory);
         
         // Ensure config directory exists
@@ -35,6 +37,8 @@ public sealed class EmbeddedConfigurationExtractor : IEmbeddedConfigurationExtra
 
         await ExtractEmbeddedConfigFilesAsync(configDir, cancellationToken);
         await ExtractSampleAppSettingsAsync(cancellationToken);
+        
+        _logger.LogInformation("Configuration setup completed successfully");
     }
 
     private async Task ExtractEmbeddedConfigFilesAsync(string configDir, CancellationToken cancellationToken)
@@ -55,7 +59,7 @@ public sealed class EmbeddedConfigurationExtractor : IEmbeddedConfigurationExtra
             // Only extract if file doesn't exist
             if (!File.Exists(targetPath))
             {
-                _logger.LogInformation("Extracting default configuration: {FileName}", fileName);
+                _logger.LogInformation("Extracting honeypot configuration: {FileName}", fileName);
                 
                 await using var stream = assembly.GetManifestResourceStream(resourceName);
                 if (stream != null)
@@ -88,7 +92,7 @@ public sealed class EmbeddedConfigurationExtractor : IEmbeddedConfigurationExtra
         // Only extract sample file if it doesn't exist
         if (!File.Exists(targetPath))
         {
-            _logger.LogInformation("Extracting sample configuration: appsettings.sample.json");
+            _logger.LogInformation("Extracting sample application settings: appsettings.sample.json");
             
             await using var stream = assembly.GetManifestResourceStream(resourceName);
             if (stream != null)
