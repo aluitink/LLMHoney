@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  DOTNET_VERSION: '9.0.x'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Restore dependencies
+      run: dotnet restore LLMHoney.sln
+    
+    - name: Build
+      run: dotnet build LLMHoney.sln --no-restore --configuration Release
+    
+    - name: Test
+      run: dotnet test LLMHoney.sln --no-build --configuration Release --verbosity normal
+
+  build-check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        runtime: [win-x64, linux-x64]
+        
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Restore dependencies
+      run: dotnet restore LLMHoney.sln
+    
+    - name: Build
+      run: dotnet build LLMHoney.sln --no-restore --configuration Release
+    
+    - name: Verify publish works for ${{ matrix.runtime }}
+      run: |
+        dotnet publish src/LLMHoney.Host/LLMHoney.Host.csproj \
+          --configuration Release \
+          --runtime ${{ matrix.runtime }} \
+          --self-contained true \
+          --output ./publish-test/${{ matrix.runtime }} \
+          -p:PublishSingleFile=true \
+          -p:PublishTrimmed=true \
+          -p:TrimMode=partial \
+          --dry-run
