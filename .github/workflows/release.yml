@@ -40,8 +40,7 @@ jobs:
           --self-contained true \
           --output ./publish/${{ matrix.runtime }} \
           -p:PublishSingleFile=true \
-          -p:PublishTrimmed=true \
-          -p:TrimMode=partial
+          -p:PublishTrimmed=false
     
     - name: Create artifact name
       id: artifact
