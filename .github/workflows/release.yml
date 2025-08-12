@@ -94,12 +94,22 @@ jobs:
           
           #### Windows
           1. Download `LLMHoney.Host.exe`
-          2. Run the executable directly
+          2. Create an `appsettings.json` file with your Azure OpenAI configuration (see sample that will be extracted on first run)
+          3. Run the executable: `LLMHoney.Host.exe`
           
           #### Linux
           1. Download `LLMHoney.Host`
           2. Make it executable: `chmod +x LLMHoney.Host`
-          3. Run: `./LLMHoney.Host`
+          3. Create an `appsettings.json` file with your Azure OpenAI configuration (see sample that will be extracted on first run)
+          4. Run: `./LLMHoney.Host`
+          
+          ### Configuration
+          
+          On first run, the application will automatically extract:
+          - Default honeypot configurations to `./configs/` directory
+          - Sample `appsettings.sample.json` file for reference
+          
+          You only need to create your own `appsettings.json` with your Azure OpenAI credentials.
           
           ### Changes
           See commit history for detailed changes.

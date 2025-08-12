@@ -25,6 +25,9 @@ builder.Logging.AddConsole();
 // Configure options
 builder.Services.Configure<ConfigurationOptions>(builder.Configuration.GetSection(ConfigurationOptions.SectionName));
 
+// Register embedded configuration extractor
+builder.Services.AddSingleton<IEmbeddedConfigurationExtractor, EmbeddedConfigurationExtractor>();
+
 // Register configuration provider
 builder.Services.AddSingleton<ISocketConfigurationProvider, FileSystemSocketConfigurationProvider>();
 
@@ -37,5 +40,9 @@ builder.Services.AddSemanticKernelAzureOpenAI(builder.Configuration);
 builder.Services.AddHostedService<MultiSocketHoneypotListener>();
 
 var host = builder.Build();
+
+// Extract default configurations on first run
+var extractor = host.Services.GetRequiredService<IEmbeddedConfigurationExtractor>();
+await extractor.ExtractDefaultConfigurationsAsync();
 
 await host.RunAsync();

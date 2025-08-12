@@ -21,4 +21,9 @@
     <ProjectReference Include="../LLMHoney.Core/LLMHoney.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="configs\*.json" />
+    <EmbeddedResource Include="appsettings.sample.json" />
+  </ItemGroup>
+
 </Project>
