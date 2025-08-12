@@ -1,12 +1,14 @@
 using System.Text;
 using System.Text.RegularExpressions;
+using LLMHoney.Core.Protocols;
+using LLMHoney.Host.Configuration;
 
-namespace LLMHoney.Host;
+namespace LLMHoney.Host.Protocols;
 
 /// <summary>
 /// HTTP protocol parser that extracts meaningful HTTP request information
 /// </summary>
-public sealed class HttpProtocolParser : IProtocolParser
+public sealed class HttpProtocolParser : IHostProtocolParser
 {
     private static readonly Regex HttpRequestLineRegex = new(@"^(\w+)\s+([^\s]+)\s+HTTP/(\d+\.\d+)", RegexOptions.Compiled);
     private static readonly Regex HeaderRegex = new(@"^([^:]+):\s*(.*)$", RegexOptions.Compiled);

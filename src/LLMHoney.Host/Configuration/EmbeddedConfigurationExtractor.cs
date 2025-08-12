@@ -2,7 +2,7 @@ using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace LLMHoney.Host;
+namespace LLMHoney.Host.Configuration;
 
 public interface IEmbeddedConfigurationExtractor
 {

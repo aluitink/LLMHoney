@@ -2,7 +2,7 @@ using Microsoft.Extensions.Options;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 
-namespace LLMHoney.Host;
+namespace LLMHoney.Host.Configuration;
 
 public interface ISocketConfigurationProvider
 {

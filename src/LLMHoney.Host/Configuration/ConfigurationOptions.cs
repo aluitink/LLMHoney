@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LLMHoney.Host;
+namespace LLMHoney.Host.Configuration;
 
 public sealed class ConfigurationOptions
 {

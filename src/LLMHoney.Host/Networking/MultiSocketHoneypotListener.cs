@@ -2,11 +2,14 @@ using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using LLMHoney.Core;
+using LLMHoney.Core.Protocols;
+using LLMHoney.Host.Configuration;
+using LLMHoney.Host.Protocols;
 using LLMHoney.Llm.Abstractions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace LLMHoney.Host;
+namespace LLMHoney.Host.Networking;
 
 /// <summary>
 /// Multi-socket TCP honeypot listener that manages multiple honeypot instances based on dynamic configuration.
@@ -370,7 +373,7 @@ internal sealed class HoneypotInstance
         try
         {
             // For SSH protocol, send proper SSH version string instead of LLM response
-            if (_config.ProtocolType == ProtocolType.Ssh)
+            if (_config.ProtocolType == Core.Protocols.ProtocolType.Ssh)
             {
                 var sshVersionBytes = System.Text.Encoding.UTF8.GetBytes(SshProtocolParser.GetSshVersionString());
                 _logger.LogInformation("Sending SSH version string to {Remote} on {Name}: {VersionString}", 

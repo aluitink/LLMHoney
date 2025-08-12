@@ -1,11 +1,13 @@
 using System.Text;
+using LLMHoney.Core.Protocols;
+using LLMHoney.Host.Configuration;
 
-namespace LLMHoney.Host;
+namespace LLMHoney.Host.Protocols;
 
 /// <summary>
 /// SSH protocol parser that handles SSH protocol specifics
 /// </summary>
-public sealed class SshProtocolParser : IProtocolParser
+public sealed class SshProtocolParser : IHostProtocolParser
 {
     private const string SSH_VERSION_STRING = "SSH-2.0-OpenSSH_8.4p1 Debian-5\r\n";
     

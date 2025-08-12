@@ -1,4 +1,7 @@
-namespace LLMHoney.Host;
+using LLMHoney.Core.Protocols;
+using LLMHoney.Host.Configuration;
+
+namespace LLMHoney.Host.Protocols;
 
 /// <summary>
 /// Factory for creating protocol parsers based on protocol type
@@ -10,7 +13,7 @@ public static class ProtocolParserFactory
     /// </summary>
     /// <param name="protocolType">The protocol type to create a parser for</param>
     /// <returns>An appropriate protocol parser instance</returns>
-    public static IProtocolParser Create(ProtocolType protocolType)
+    public static IHostProtocolParser Create(ProtocolType protocolType)
     {
         return protocolType switch
         {

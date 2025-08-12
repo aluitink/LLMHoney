@@ -1,11 +1,13 @@
 using System.Text;
+using LLMHoney.Core.Protocols;
+using LLMHoney.Host.Configuration;
 
-namespace LLMHoney.Host;
+namespace LLMHoney.Host.Protocols;
 
 /// <summary>
 /// Generic protocol parser that provides the existing hex-dump behavior
 /// </summary>
-public sealed class GenericProtocolParser : IProtocolParser
+public sealed class GenericProtocolParser : IHostProtocolParser
 {
     public ProtocolData Parse(ReadOnlySpan<byte> rawData)
     {
